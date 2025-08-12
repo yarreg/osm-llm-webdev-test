@@ -1,0 +1,12 @@
+
+Task Name: {{ task.name }}
+Design Brief: {{ task.brief }}
+Required Sections: {{ task.required_sections }}
+
+{% if call_method == "tools" %}
+Call the emit_files tool with the full content of the three files.
+{% endif %}
+
+{% if call_method == "json" %}
+Respond with exactly one JSON object with fields: index_html, app_js, styles_css. No other text.
+{% endif %}

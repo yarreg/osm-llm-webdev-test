@@ -1,0 +1,35 @@
+
+tasks:
+  - name: "dev_portfolio_brutalist"
+    brief: "A personal website for a backend developer. Brutalist aesthetic (bold typography, sharp grids, minimal color palette)."
+    required_sections: ["hero with name + tagline", "skills grid", "3 featured projects", "contact CTA"]
+  - name: "saas_landing_glassmorphism"
+    brief: "Landing page for a fictitious SaaS called “NimbusBoard” (team dashboards). Glassmorphism cards, subtle blurs, call-to-action."
+    required_sections: ["hero with primary CTA", "features (3–4)", "pricing (Free/Pro/Team)", "customer logos", "footer"]
+  - name: "restaurant_dark_singlepage"
+    brief: "Upscale bistro “Nocturne”. Dark theme, appetizing imagery placeholders (SVG/gradients), sticky navbar."
+    required_sections: ["hero", "menu highlights", "reservation CTA", "location & hours", "footer"]
+  - name: "mobile_app_neumorphic"
+    brief: "Promo site for a mobile app “FocusFlow”. Neumorphic cards and buttons, soft shadows."
+    required_sections: ["hero with app mockup placeholder", "features", "testimonials", "download badges (SVG placeholders)", "FAQ"]
+  - name: "docs_portal_minimal"
+    brief: "Minimal docs landing for “QuantaJS”. Clean typography, keyboard-friendly navigation."
+    required_sections: ["search bar (non-functional)", "quickstart", "3 top guides", "version switcher mock", "footer"]
+
+models:
+  - name: "openai/gpt-oss-120b"
+    call: tools
+  - name: "mistralai/codestral-2508"
+    call: json
+  - name: "z-ai/glm-4.5"
+    call: json
+  - name: "qwen/qwen3-coder"
+    call: json
+  - name: "qwen/qwen3-235b-a22b-thinking-2507"
+    call: json
+  - name: "moonshotai/kimi-k2"
+    call: tools
+  - name: "deepseek/deepseek-r1-0528"
+    call: json
+  - name: "deepseek/deepseek-chat-v3-0324"
+    call: json

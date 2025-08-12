@@ -148,3 +148,5 @@ cython_debug/
 
 # Result and reports directories
 result/
+
+*:[Zz]one.Identifier

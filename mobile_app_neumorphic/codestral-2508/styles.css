@@ -1,0 +1,89 @@
+:root {
+    --neumorphic-shadow: 8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff;
+    --neumorphic-inset-shadow: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.neumorphic-card {
+    background: #e0e5ec;
+    box-shadow: var(--neumorphic-shadow);
+    transition: all 0.3s ease;
+}
+
+.neumorphic-button {
+    background: #e0e5ec;
+    box-shadow: var(--neumorphic-shadow);
+    transition: all 0.3s ease;
+}
+
+.neumorphic-button:hover {
+    box-shadow: var(--neumorphic-inset-shadow);
+}
+
+.neumorphic-card:hover {
+    box-shadow: var(--neumorphic-inset-shadow);
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.float-animation {
+    animation: float 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .float-animation {
+        animation: none;
+    }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Focus styles */
+button:focus,
+[role="button"]:focus {
+    outline: 2px solid #4f46e5;
+    outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

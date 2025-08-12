@@ -1,9 +1,0 @@
-httpx
-tenacity
-playwright
-jinja2
-python-dotenv
-pydantic
-rich
-tqdm
-pyyaml

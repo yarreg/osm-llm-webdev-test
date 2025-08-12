@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>LLM Web Gallery</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+
+  <style>
+    :root {
+      --gap: 1rem;
+    }
+
+    .gal-header {
+      padding: 2rem 0 1rem;
+    }
+
+    .gal-brief {
+      color: #4a4a4a;
+    }
+
+    .gal-card {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .gal-card .card-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      flex: 1;
+    }
+
+    .gal-status.success .tag { background: #48c774; color: #fff; }
+    .gal-status.failed  .tag { background: #f14668; color: #fff; }
+
+    .gal-error {
+      border: 2px dashed #f14668;
+      border-radius: 8px;
+      padding: 1rem;
+      color: #b71c2f;
+      background: #fff5f7;
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      justify-content: center;
+      min-height: 160px;
+      text-align: center;
+    }
+
+    .gal-error svg { width: 24px; height: 24px; }
+
+    .gal-screenshot-wrap {
+      display: grid;
+      place-items: center;
+      background: #fafafa;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 0.75rem;
+      min-height: 200px;
+    }
+
+    .gal-screenshot {
+      max-width: 100%;
+      height: auto;
+      display: none;
+      border-radius: 6px;
+      border: 1px solid #eaeaea;
+    }
+
+    .gal-screenshot.show {
+      display: block;
+    }
+
+    .gal-toggle .button.is-selected {
+      box-shadow: inset 0 0 0 2px rgba(0,0,0,0.2);
+    }
+
+    .gal-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .gal-report {
+      display: none;
+      background: #f9f9f9;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      max-height: 320px;
+      overflow: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .gal-report.show {
+      display: block;
+    }
+
+    .gal-vote-badge {
+      margin-left: 0.5rem;
+    }
+
+    .gal-empty {
+      border: 1px dashed #dbdbdb;
+      padding: 1.5rem;
+      text-align: center;
+      color: #7a7a7a;
+      border-radius: 8px;
+    }
+
+    .gal-summary th, .gal-summary td {
+      vertical-align: middle !important;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <section class="section">
+    <div class="container">
+      <header class="gal-header">
+        <h1 class="title is-3">LLM Web Gallery</h1>
+        <p class="subtitle is-6">View the results of generation on tasks and models. Vote and compare.</p>
+      </header>
+
+      <div id="app"></div>
+
+      <hr />
+
+      <section id="summary-section">
+        <!-- replace the heading with a heading + reset button -->
+        <div class="level is-mobile">
+          <div class="level-left">
+            <h2 class="title is-4">Vote result</h2>
+          </div>
+          <div class="level-right">
+            <button id="reset-votes" class="button is-small is-danger is-light" type="button">Reset votes</button>
+          </div>
+        </div>
+        <div class="table-container">
+          <table class="table is-striped is-fullwidth gal-summary">
+            <thead>
+              <tr>
+                <!-- changed: aggregate by model, no per-task rows -->
+                <th>Model</th>
+                <th class="has-text-right">Votes</th>
+              </tr>
+            </thead>
+            <tbody id="summary-body">
+              <!-- JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <script type="application/json" id="embedded-data">{"tasks": [{"name": "dev_portfolio_brutalist", "brief": "A personal website for a backend developer. Brutalist aesthetic (bold typography, sharp grids, minimal color palette).", "models": [{"model_name": "gpt-oss-120b", "status": "success", "paths": {"index_html": "dev_portfolio_brutalist/gpt-oss-120b/index.html", "screenshots": {"mobile": "dev_portfolio_brutalist/gpt-oss-120b/screenshots/390_844.png", "laptop": "dev_portfolio_brutalist/gpt-oss-120b/screenshots/1280_800.png", "desktop": "dev_portfolio_brutalist/gpt-oss-120b/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 6.4677734375, "css_size_kb": 1.486328125}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 33.502867698669434, "attempts": 1}}, {"model_name": "codestral-2508", "status": "success", "paths": {"index_html": "dev_portfolio_brutalist/codestral-2508/index.html", "screenshots": {"mobile": "dev_portfolio_brutalist/codestral-2508/screenshots/390_844.png", "laptop": "dev_portfolio_brutalist/codestral-2508/screenshots/1280_800.png", "desktop": "dev_portfolio_brutalist/codestral-2508/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 7.142578125, "css_size_kb": 1.1474609375}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 10.723509073257446, "attempts": 1}}, {"model_name": "glm-4.5", "status": "success", "paths": {"index_html": "dev_portfolio_brutalist/glm-4.5/index.html", "screenshots": {"mobile": "dev_portfolio_brutalist/glm-4.5/screenshots/390_844.png", "laptop": "dev_portfolio_brutalist/glm-4.5/screenshots/1280_800.png", "desktop": "dev_portfolio_brutalist/glm-4.5/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 11.34765625, "css_size_kb": 2.2783203125}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 240.2158980369568, "attempts": 1}}, {"model_name": "qwen3-coder", "status": "success", "paths": {"index_html": "dev_portfolio_brutalist/qwen3-coder/index.html", "screenshots": {"mobile": "dev_portfolio_brutalist/qwen3-coder/screenshots/390_844.png", "laptop": "dev_portfolio_brutalist/qwen3-coder/screenshots/1280_800.png", "desktop": "dev_portfolio_brutalist/qwen3-coder/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 6.4951171875, "css_size_kb": 1.2099609375}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 30.27190589904785, "attempts": 1}}, {"model_name": "qwen3-235b-a22b-thinking-2507", "status": "success", "paths": {"index_html": "dev_portfolio_brutalist/qwen3-235b-a22b-thinking-2507/index.html", "screenshots": {"mobile": "dev_portfolio_brutalist/qwen3-235b-a22b-thinking-2507/screenshots/390_844.png", "laptop": "dev_portfolio_brutalist/qwen3-235b-a22b-thinking-2507/screenshots/1280_800.png", "desktop": "dev_portfolio_brutalist/qwen3-235b-a22b-thinking-2507/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 4.5166015625, "css_size_kb": 0.9541015625}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 490.64305329322815, "attempts": 1}}, {"model_name": "kimi-k2", "status": "success", "paths": {"index_html": "dev_portfolio_brutalist/kimi-k2/index.html", "screenshots": {"mobile": "dev_portfolio_brutalist/kimi-k2/screenshots/390_844.png", "laptop": "dev_portfolio_brutalist/kimi-k2/screenshots/1280_800.png", "desktop": "dev_portfolio_brutalist/kimi-k2/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 11.6669921875, "css_size_kb": 2.0302734375}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 161.81448221206665, "attempts": 1}}, {"model_name": "deepseek-r1-0528", "status": "success", "paths": {"index_html": "dev_portfolio_brutalist/deepseek-r1-0528/index.html", "screenshots": {"mobile": "dev_portfolio_brutalist/deepseek-r1-0528/screenshots/390_844.png", "laptop": "dev_portfolio_brutalist/deepseek-r1-0528/screenshots/1280_800.png", "desktop": "dev_portfolio_brutalist/deepseek-r1-0528/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 5.6435546875, "css_size_kb": 1.4599609375}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 77.20700025558472, "attempts": 1}}, {"model_name": "deepseek-chat-v3-0324", "status": "success", "paths": {"index_html": "dev_portfolio_brutalist/deepseek-chat-v3-0324/index.html", "screenshots": {"mobile": "dev_portfolio_brutalist/deepseek-chat-v3-0324/screenshots/390_844.png", "laptop": "dev_portfolio_brutalist/deepseek-chat-v3-0324/screenshots/1280_800.png", "desktop": "dev_portfolio_brutalist/deepseek-chat-v3-0324/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": false, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 2.375, "css_size_kb": 1.935546875}, "console_messages": [], "passed": true, "scrore": 65, "generation_time": 68.21473121643066, "attempts": 1}}]}, {"name": "saas_landing_glassmorphism", "brief": "Landing page for a fictitious SaaS called “NimbusBoard” (team dashboards). Glassmorphism cards, subtle blurs, call-to-action.", "models": [{"model_name": "gpt-oss-120b", "status": "success", "paths": {"index_html": "saas_landing_glassmorphism/gpt-oss-120b/index.html", "screenshots": {"mobile": "saas_landing_glassmorphism/gpt-oss-120b/screenshots/390_844.png", "laptop": "saas_landing_glassmorphism/gpt-oss-120b/screenshots/1280_800.png", "desktop": "saas_landing_glassmorphism/gpt-oss-120b/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 7.3564453125, "css_size_kb": 1.5224609375}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 45.089252948760986, "attempts": 1}}, {"model_name": "codestral-2508", "status": "success", "paths": {"index_html": "saas_landing_glassmorphism/codestral-2508/index.html", "screenshots": {"mobile": "saas_landing_glassmorphism/codestral-2508/screenshots/390_844.png", "laptop": "saas_landing_glassmorphism/codestral-2508/screenshots/1280_800.png", "desktop": "saas_landing_glassmorphism/codestral-2508/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 12.14453125, "css_size_kb": 2.4521484375}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 20.995668411254883, "attempts": 1}}, {"model_name": "glm-4.5", "status": "success", "paths": {"index_html": "saas_landing_glassmorphism/glm-4.5/index.html", "screenshots": {"mobile": "saas_landing_glassmorphism/glm-4.5/screenshots/390_844.png", "laptop": "saas_landing_glassmorphism/glm-4.5/screenshots/1280_800.png", "desktop": "saas_landing_glassmorphism/glm-4.5/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 25.9404296875, "css_size_kb": 3.0244140625}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 176.93424248695374, "attempts": 1}}, {"model_name": "qwen3-coder", "status": "success", "paths": {"index_html": "saas_landing_glassmorphism/qwen3-coder/index.html", "screenshots": {"mobile": "saas_landing_glassmorphism/qwen3-coder/screenshots/390_844.png", "laptop": "saas_landing_glassmorphism/qwen3-coder/screenshots/1280_800.png", "desktop": "saas_landing_glassmorphism/qwen3-coder/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 14.5439453125, "css_size_kb": 1.6220703125}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 136.70381212234497, "attempts": 1}}, {"model_name": "qwen3-235b-a22b-thinking-2507", "status": "success", "paths": {"index_html": "saas_landing_glassmorphism/qwen3-235b-a22b-thinking-2507/index.html", "screenshots": {"mobile": "saas_landing_glassmorphism/qwen3-235b-a22b-thinking-2507/screenshots/390_844.png", "laptop": "saas_landing_glassmorphism/qwen3-235b-a22b-thinking-2507/screenshots/1280_800.png", "desktop": "saas_landing_glassmorphism/qwen3-235b-a22b-thinking-2507/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 11.8349609375, "css_size_kb": 1.9794921875}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 419.33683943748474, "attempts": 1}}, {"model_name": "kimi-k2", "status": "success", "paths": {"index_html": "saas_landing_glassmorphism/kimi-k2/index.html", "screenshots": {"mobile": "saas_landing_glassmorphism/kimi-k2/screenshots/390_844.png", "laptop": "saas_landing_glassmorphism/kimi-k2/screenshots/1280_800.png", "desktop": "saas_landing_glassmorphism/kimi-k2/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 18.970703125, "css_size_kb": 2.875}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 526.9354689121246, "attempts": 1}}, {"model_name": "deepseek-r1-0528", "status": "success", "paths": {"index_html": "saas_landing_glassmorphism/deepseek-r1-0528/index.html", "screenshots": {"mobile": "saas_landing_glassmorphism/deepseek-r1-0528/screenshots/390_844.png", "laptop": "saas_landing_glassmorphism/deepseek-r1-0528/screenshots/1280_800.png", "desktop": "saas_landing_glassmorphism/deepseek-r1-0528/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 13.2421875, "css_size_kb": 2.1201171875}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 203.6565318107605, "attempts": 1}}, {"model_name": "deepseek-chat-v3-0324", "status": "success", "paths": {"index_html": "saas_landing_glassmorphism/deepseek-chat-v3-0324/index.html", "screenshots": {"mobile": "saas_landing_glassmorphism/deepseek-chat-v3-0324/screenshots/390_844.png", "laptop": "saas_landing_glassmorphism/deepseek-chat-v3-0324/screenshots/1280_800.png", "desktop": "saas_landing_glassmorphism/deepseek-chat-v3-0324/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 8.0771484375, "css_size_kb": 1.435546875}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 131.5768802165985, "attempts": 1}}]}, {"name": "restaurant_dark_singlepage", "brief": "Upscale bistro “Nocturne”. Dark theme, appetizing imagery placeholders (SVG/gradients), sticky navbar.", "models": [{"model_name": "gpt-oss-120b", "status": "success", "paths": {"index_html": "restaurant_dark_singlepage/gpt-oss-120b/index.html", "screenshots": {"mobile": "restaurant_dark_singlepage/gpt-oss-120b/screenshots/390_844.png", "laptop": "restaurant_dark_singlepage/gpt-oss-120b/screenshots/1280_800.png", "desktop": "restaurant_dark_singlepage/gpt-oss-120b/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 11.8056640625, "css_size_kb": 1.529296875}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 29.211371421813965, "attempts": 1}}, {"model_name": "codestral-2508", "status": "success", "paths": {"index_html": "restaurant_dark_singlepage/codestral-2508/index.html", "screenshots": {"mobile": "restaurant_dark_singlepage/codestral-2508/screenshots/390_844.png", "laptop": "restaurant_dark_singlepage/codestral-2508/screenshots/1280_800.png", "desktop": "restaurant_dark_singlepage/codestral-2508/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 13.1943359375, "css_size_kb": 1.5048828125}, "console_messages": [{"type": "error", "text": "Unexpected token ')'"}], "passed": false, "scrore": 45, "generation_time": 249.91957235336304, "attempts": 3}}, {"model_name": "glm-4.5", "status": "success", "paths": {"index_html": "restaurant_dark_singlepage/glm-4.5/index.html", "screenshots": {"mobile": "restaurant_dark_singlepage/glm-4.5/screenshots/390_844.png", "laptop": "restaurant_dark_singlepage/glm-4.5/screenshots/1280_800.png", "desktop": "restaurant_dark_singlepage/glm-4.5/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 27.45703125, "css_size_kb": 3.439453125}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 1547.2476394176483, "attempts": 1}}, {"model_name": "qwen3-coder", "status": "success", "paths": {"index_html": "restaurant_dark_singlepage/qwen3-coder/index.html", "screenshots": {"mobile": "restaurant_dark_singlepage/qwen3-coder/screenshots/390_844.png", "laptop": "restaurant_dark_singlepage/qwen3-coder/screenshots/1280_800.png", "desktop": "restaurant_dark_singlepage/qwen3-coder/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 18.2890625, "css_size_kb": 2.27734375}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 249.20863342285156, "attempts": 2}}, {"model_name": "qwen3-235b-a22b-thinking-2507", "status": "success", "paths": {"index_html": "restaurant_dark_singlepage/qwen3-235b-a22b-thinking-2507/index.html", "screenshots": {"mobile": "restaurant_dark_singlepage/qwen3-235b-a22b-thinking-2507/screenshots/390_844.png", "laptop": "restaurant_dark_singlepage/qwen3-235b-a22b-thinking-2507/screenshots/1280_800.png", "desktop": "restaurant_dark_singlepage/qwen3-235b-a22b-thinking-2507/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 16.26953125, "css_size_kb": 2.0361328125}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 183.3817012310028, "attempts": 1}}, {"model_name": "kimi-k2", "status": "success", "paths": {"index_html": "restaurant_dark_singlepage/kimi-k2/index.html", "screenshots": {"mobile": "restaurant_dark_singlepage/kimi-k2/screenshots/390_844.png", "laptop": "restaurant_dark_singlepage/kimi-k2/screenshots/1280_800.png", "desktop": "restaurant_dark_singlepage/kimi-k2/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 20.4423828125, "css_size_kb": 3.98046875}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 257.61313819885254, "attempts": 1}}, {"model_name": "deepseek-r1-0528", "status": "success", "paths": {"index_html": "restaurant_dark_singlepage/deepseek-r1-0528/index.html", "screenshots": {"mobile": "restaurant_dark_singlepage/deepseek-r1-0528/screenshots/390_844.png", "laptop": "restaurant_dark_singlepage/deepseek-r1-0528/screenshots/1280_800.png", "desktop": "restaurant_dark_singlepage/deepseek-r1-0528/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 16.9619140625, "css_size_kb": 1.6240234375}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 285.6035051345825, "attempts": 1}}, {"model_name": "deepseek-chat-v3-0324", "status": "success", "paths": {"index_html": "restaurant_dark_singlepage/deepseek-chat-v3-0324/index.html", "screenshots": {"mobile": "restaurant_dark_singlepage/deepseek-chat-v3-0324/screenshots/390_844.png", "laptop": "restaurant_dark_singlepage/deepseek-chat-v3-0324/screenshots/1280_800.png", "desktop": "restaurant_dark_singlepage/deepseek-chat-v3-0324/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": false, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 13.900390625, "css_size_kb": 2.7666015625}, "console_messages": [{"type": "debug", "text": "Search endpoint requested!"}], "passed": false, "scrore": 25, "generation_time": 1089.84197473526, "attempts": 3}}]}, {"name": "mobile_app_neumorphic", "brief": "Promo site for a mobile app “FocusFlow”. Neumorphic cards and buttons, soft shadows.", "models": [{"model_name": "gpt-oss-120b", "status": "success", "paths": {"index_html": "mobile_app_neumorphic/gpt-oss-120b/index.html", "screenshots": {"mobile": "mobile_app_neumorphic/gpt-oss-120b/screenshots/390_844.png", "laptop": "mobile_app_neumorphic/gpt-oss-120b/screenshots/1280_800.png", "desktop": "mobile_app_neumorphic/gpt-oss-120b/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 12.12890625, "css_size_kb": 2.2333984375}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 26.888673543930054, "attempts": 1}}, {"model_name": "codestral-2508", "status": "success", "paths": {"index_html": "mobile_app_neumorphic/codestral-2508/index.html", "screenshots": {"mobile": "mobile_app_neumorphic/codestral-2508/screenshots/390_844.png", "laptop": "mobile_app_neumorphic/codestral-2508/screenshots/1280_800.png", "desktop": "mobile_app_neumorphic/codestral-2508/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 17.892578125, "css_size_kb": 1.6796875}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 19.733789205551147, "attempts": 1}}, {"model_name": "glm-4.5", "status": "success", "paths": {"index_html": "mobile_app_neumorphic/glm-4.5/index.html", "screenshots": {"mobile": "mobile_app_neumorphic/glm-4.5/screenshots/390_844.png", "laptop": "mobile_app_neumorphic/glm-4.5/screenshots/1280_800.png", "desktop": "mobile_app_neumorphic/glm-4.5/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 17.208984375, "css_size_kb": 3.1875}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 411.34543204307556, "attempts": 1}}, {"model_name": "qwen3-coder", "status": "success", "paths": {"index_html": "mobile_app_neumorphic/qwen3-coder/index.html", "screenshots": {"mobile": "mobile_app_neumorphic/qwen3-coder/screenshots/390_844.png", "laptop": "mobile_app_neumorphic/qwen3-coder/screenshots/1280_800.png", "desktop": "mobile_app_neumorphic/qwen3-coder/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 9.1669921875, "css_size_kb": 1.9638671875}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 70.93101453781128, "attempts": 1}}, {"model_name": "qwen3-235b-a22b-thinking-2507", "status": "success", "paths": {"index_html": "mobile_app_neumorphic/qwen3-235b-a22b-thinking-2507/index.html", "screenshots": {"mobile": "mobile_app_neumorphic/qwen3-235b-a22b-thinking-2507/screenshots/390_844.png", "laptop": "mobile_app_neumorphic/qwen3-235b-a22b-thinking-2507/screenshots/1280_800.png", "desktop": "mobile_app_neumorphic/qwen3-235b-a22b-thinking-2507/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 13.2138671875, "css_size_kb": 2.5166015625}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 396.0321340560913, "attempts": 2}}, {"model_name": "kimi-k2", "status": "success", "paths": {"index_html": "mobile_app_neumorphic/kimi-k2/index.html", "screenshots": {"mobile": "mobile_app_neumorphic/kimi-k2/screenshots/390_844.png", "laptop": "mobile_app_neumorphic/kimi-k2/screenshots/1280_800.png", "desktop": "mobile_app_neumorphic/kimi-k2/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 13.1337890625, "css_size_kb": 3.78515625}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 541.790678024292, "attempts": 1}}, {"model_name": "deepseek-r1-0528", "status": "success", "paths": {"index_html": "mobile_app_neumorphic/deepseek-r1-0528/index.html", "screenshots": {"mobile": "mobile_app_neumorphic/deepseek-r1-0528/screenshots/390_844.png", "laptop": "mobile_app_neumorphic/deepseek-r1-0528/screenshots/1280_800.png", "desktop": "mobile_app_neumorphic/deepseek-r1-0528/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 12.58984375, "css_size_kb": 2.8310546875}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 136.7065031528473, "attempts": 1}}, {"model_name": "deepseek-chat-v3-0324", "status": "success", "paths": {"index_html": "mobile_app_neumorphic/deepseek-chat-v3-0324/index.html", "screenshots": {"mobile": "mobile_app_neumorphic/deepseek-chat-v3-0324/screenshots/390_844.png", "laptop": "mobile_app_neumorphic/deepseek-chat-v3-0324/screenshots/1280_800.png", "desktop": "mobile_app_neumorphic/deepseek-chat-v3-0324/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 5.716796875, "css_size_kb": 2.912109375}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 88.23091769218445, "attempts": 1}}]}, {"name": "docs_portal_minimal", "brief": "Minimal docs landing for “QuantaJS”. Clean typography, keyboard-friendly navigation.", "models": [{"model_name": "gpt-oss-120b", "status": "success", "paths": {"index_html": "docs_portal_minimal/gpt-oss-120b/index.html", "screenshots": {"mobile": "docs_portal_minimal/gpt-oss-120b/screenshots/390_844.png", "laptop": "docs_portal_minimal/gpt-oss-120b/screenshots/1280_800.png", "desktop": "docs_portal_minimal/gpt-oss-120b/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 6.3818359375, "css_size_kb": 1.2744140625}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 19.688283920288086, "attempts": 1}}, {"model_name": "codestral-2508", "status": "success", "paths": {"index_html": "docs_portal_minimal/codestral-2508/index.html", "screenshots": {"mobile": "docs_portal_minimal/codestral-2508/screenshots/390_844.png", "laptop": "docs_portal_minimal/codestral-2508/screenshots/1280_800.png", "desktop": "docs_portal_minimal/codestral-2508/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 6.1171875, "css_size_kb": 1.328125}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 10.962483882904053, "attempts": 1}}, {"model_name": "glm-4.5", "status": "success", "paths": {"index_html": "docs_portal_minimal/glm-4.5/index.html", "screenshots": {"mobile": "docs_portal_minimal/glm-4.5/screenshots/390_844.png", "laptop": "docs_portal_minimal/glm-4.5/screenshots/1280_800.png", "desktop": "docs_portal_minimal/glm-4.5/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 9.9072265625, "css_size_kb": 3.384765625}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 464.12803626060486, "attempts": 1}}, {"model_name": "qwen3-coder", "status": "success", "paths": {"index_html": "docs_portal_minimal/qwen3-coder/index.html", "screenshots": {"mobile": "docs_portal_minimal/qwen3-coder/screenshots/390_844.png", "laptop": "docs_portal_minimal/qwen3-coder/screenshots/1280_800.png", "desktop": "docs_portal_minimal/qwen3-coder/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": false, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 8.2314453125, "css_size_kb": 2.0361328125}, "console_messages": [], "passed": true, "scrore": 65, "generation_time": 89.40602684020996, "attempts": 1}}, {"model_name": "qwen3-235b-a22b-thinking-2507", "status": "success", "paths": {"index_html": "docs_portal_minimal/qwen3-235b-a22b-thinking-2507/index.html", "screenshots": {"mobile": "docs_portal_minimal/qwen3-235b-a22b-thinking-2507/screenshots/390_844.png", "laptop": "docs_portal_minimal/qwen3-235b-a22b-thinking-2507/screenshots/1280_800.png", "desktop": "docs_portal_minimal/qwen3-235b-a22b-thinking-2507/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 5.9375, "css_size_kb": 1.3466796875}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 169.5776391029358, "attempts": 1}}, {"model_name": "kimi-k2", "status": "success", "paths": {"index_html": "docs_portal_minimal/kimi-k2/index.html", "screenshots": {"mobile": "docs_portal_minimal/kimi-k2/screenshots/390_844.png", "laptop": "docs_portal_minimal/kimi-k2/screenshots/1280_800.png", "desktop": "docs_portal_minimal/kimi-k2/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 8.3447265625, "css_size_kb": 2.8037109375}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 207.75958800315857, "attempts": 1}}, {"model_name": "deepseek-r1-0528", "status": "success", "paths": {"index_html": "docs_portal_minimal/deepseek-r1-0528/index.html", "screenshots": {"mobile": "docs_portal_minimal/deepseek-r1-0528/screenshots/390_844.png", "laptop": "docs_portal_minimal/deepseek-r1-0528/screenshots/1280_800.png", "desktop": "docs_portal_minimal/deepseek-r1-0528/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": false, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 9.47265625, "css_size_kb": 2.0654296875}, "console_messages": [], "passed": true, "scrore": 65, "generation_time": 121.91394305229187, "attempts": 1}}, {"model_name": "deepseek-chat-v3-0324", "status": "success", "paths": {"index_html": "docs_portal_minimal/deepseek-chat-v3-0324/index.html", "screenshots": {"mobile": "docs_portal_minimal/deepseek-chat-v3-0324/screenshots/390_844.png", "laptop": "docs_portal_minimal/deepseek-chat-v3-0324/screenshots/1280_800.png", "desktop": "docs_portal_minimal/deepseek-chat-v3-0324/screenshots/1440_900.png"}}, "report": {"structure": {"missing_sections": []}, "responsiveness": {"mobile": true, "laptop": true, "desktop": true}, "accessibility": {}, "performance": {"js_size_kb": 5.375, "css_size_kb": 1.1845703125}, "console_messages": [], "passed": true, "scrore": 85, "generation_time": 37.75697636604309, "attempts": 1}}]}]}</script>
+
+  <script>
+  (function(){
+    "use strict";
+
+    function $(sel, root=document){ return root.querySelector(sel); }
+    function $all(sel, root=document){ return Array.from(root.querySelectorAll(sel)); }
+    function el(tag, cls, attrs) {
+      const e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (attrs) for (const [k, v] of Object.entries(attrs)) {
+        if (k === 'text') e.textContent = v;
+        else if (k === 'html') e.innerHTML = v;
+        else e.setAttribute(k, v);
+      }
+      return e;
+    }
+
+    function keyForVote(taskName, modelName) {
+      return taskName + "::" + modelName;
+    }
+
+    function getVotes(taskName, modelName) {
+      const k = keyForVote(taskName, modelName);
+      const v = localStorage.getItem(k);
+      return v ? parseInt(v, 10) : 0;
+    }
+
+    function addVote(taskName, modelName) {
+      const k = keyForVote(taskName, modelName);
+      const cur = getVotes(taskName, modelName);
+      const next = cur + 1;
+      localStorage.setItem(k, String(next));
+      return next;
+    }
+
+    // NEW: remove a single vote entry and reset helpers
+    function removeVote(taskName, modelName) {
+      localStorage.removeItem(keyForVote(taskName, modelName));
+    }
+
+    function resetAllVotes(data) {
+      (data.tasks || []).forEach(task => {
+        (task.models || []).forEach(m => {
+          removeVote(task.name, m.model_name);
+        });
+      });
+    }
+
+    function updateAllVoteBadges() {
+      $all('.gal-vote-badge').forEach(badge => {
+        const task = badge.getAttribute('data-task');
+        const model = badge.getAttribute('data-model');
+        if (task && model) {
+          badge.textContent = String(getVotes(task, model));
+        }
+      });
+    }
+
+    function pretty(obj) {
+      try { return JSON.stringify(obj, null, 2); }
+      catch { return String(obj); }
+    }
+
+    function availableScreenshotKey(paths) {
+      if (!paths) return null;
+      if (paths.desktop) return 'desktop';
+      if (paths.mobile)  return 'mobile';
+      if (paths.laptop)  return 'laptop';
+      return null;
+    }
+
+    function renderErrorBlock() {
+      const wrap = el('div', 'gal-error');
+      wrap.innerHTML = `
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path fill="currentColor" d="M11.001 10h2v5h-2zm0 7h2v2h-2z"/><path fill="currentColor" d="M1 21h22L12 2 1 21z"/>
+        </svg>
+        <span><strong>Generation failed</strong>. No screenshots or preview available.</span>
+      `;
+      return wrap;
+    }
+
+    function buildModelCard(task, model) {
+      const card = el('div', 'card gal-card');
+
+      const header = el('header', 'card-header');
+      const title = el('p', 'card-header-title', { text: model.model_name });
+      const statusTag = el('span', 'tag is-light');
+      statusTag.textContent = model.status.toUpperCase();
+      const statusWrap = el('div', 'card-header-icon gal-status ' + (model.status === 'success' ? 'success' : 'failed'));
+      statusWrap.appendChild(statusTag);
+
+      header.appendChild(title);
+      header.appendChild(statusWrap);
+      card.appendChild(header);
+
+      const content = el('div', 'card-content');
+
+      if (model.status === 'success') {
+        const hasShots = model.paths && model.paths.screenshots && Object.keys(model.paths.screenshots).length > 0;
+
+        if (hasShots) {
+          const toggle = el('div', 'buttons has-addons is-centered gal-toggle');
+          const btnMobile = el('button', 'button is-small', { type: 'button', text: 'Mobile' });
+          const btnLaptop = el('button', 'button is-small', { type: 'button', text: 'Laptop' });
+          const btnDesktop = el('button', 'button is-small', { type: 'button', text: 'Desktop' });
+
+          const shotWrap = el('div', 'gal-screenshot-wrap');
+          const img = el('img', 'gal-screenshot', { alt: `Screenshot for ${model.model_name}` });
+
+          shotWrap.appendChild(img);
+          content.appendChild(shotWrap);
+          content.appendChild(toggle);
+
+          const toggleMap = {
+            mobile: { btn: btnMobile, path: model.paths.screenshots.mobile || null },
+            laptop: { btn: btnLaptop, path: model.paths.screenshots.laptop || null },
+            desktop:{ btn: btnDesktop, path: model.paths.screenshots.desktop || null }
+          };
+
+          for (const [k, o] of Object.entries(toggleMap)) {
+            if (!o.path) {
+              o.btn.disabled = true;
+            }
+            toggle.appendChild(o.btn);
+          }
+
+          function activate(which) {
+            for (const [k, o] of Object.entries(toggleMap)) {
+              if (k === which && o.path) {
+                o.btn.classList.add('is-selected', 'is-info', 'is-light');
+                o.btn.setAttribute('aria-pressed', 'true');
+                img.src = o.path;
+                img.classList.add('show');
+                img.alt = `${k} screenshot for ${model.model_name}`;
+              } else {
+                o.btn.classList.remove('is-selected', 'is-info', 'is-light');
+                o.btn.setAttribute('aria-pressed', 'false');
+              }
+            }
+          }
+
+          const firstKey = availableScreenshotKey(model.paths.screenshots) || 'desktop';
+          activate(firstKey);
+
+          btnMobile.addEventListener('click', () => { if (!btnMobile.disabled) activate('mobile'); });
+          btnLaptop.addEventListener('click', () => { if (!btnLaptop.disabled) activate('laptop'); });
+          btnDesktop.addEventListener('click', () => { if (!btnDesktop.disabled) activate('desktop'); });
+        } else {
+          const empty = el('div', 'gal-empty', { text: 'No screenshots available.' });
+          content.appendChild(empty);
+        }
+
+        const actions = el('div', 'gal-actions');
+        if (model.paths && model.paths.index_html) {
+          const openBtn = el('a', 'button is-primary is-light', {
+            href: model.paths.index_html, target: '_blank', rel: 'noopener',
+            text: 'Open site'
+          });
+          actions.appendChild(openBtn);
+        }
+
+        const reportBtn = el('button', 'button is-info is-light', { type:'button', text:'Show report' });
+        actions.appendChild(reportBtn);
+
+        const voteBtn = el('button', 'button is-warning is-light', { type:'button', text:'Vote' });
+        const voteBadge = el('span', 'tag is-warning is-light gal-vote-badge', {
+          text: String(getVotes(task.name, model.model_name)),
+          'data-task': task.name,
+          'data-model': model.model_name
+        });
+        actions.appendChild(voteBtn);
+        actions.appendChild(voteBadge);
+
+        content.appendChild(actions);
+
+        const reportPanel = el('pre', 'gal-report');
+        if (model.report) {
+          reportPanel.textContent = pretty(model.report);
+        } else {
+          reportPanel.textContent = 'Report not found.';
+        }
+        content.appendChild(reportPanel);
+
+        reportBtn.addEventListener('click', () => {
+          const isShown = reportPanel.classList.toggle('show');
+          reportBtn.textContent = isShown ? 'Hide report' : 'Show report';
+        });
+
+        voteBtn.addEventListener('click', () => {
+          const v = addVote(task.name, model.model_name);
+          voteBadge.textContent = String(v);
+          rebuildSummary(window.__DATA__);
+        });
+
+      } else {
+        // FAILED
+        content.appendChild(renderErrorBlock());
+        const actions = el('div', 'gal-actions');
+        const voteBtn = el('button', 'button is-warning is-light', { type:'button', text:'Vote' });
+        const voteBadge = el('span', 'tag is-warning is-light gal-vote-badge', {
+          text: String(getVotes(task.name, model.model_name)),
+          'data-task': task.name,
+          'data-model': model.model_name
+        });
+        actions.appendChild(voteBtn);
+        actions.appendChild(voteBadge);
+        content.appendChild(actions);
+
+        voteBtn.addEventListener('click', () => {
+          const v = addVote(task.name, model.model_name);
+          voteBadge.textContent = String(v);
+          rebuildSummary(window.__DATA__);
+        });
+      }
+
+      card.appendChild(content);
+      return card;
+    }
+
+    function buildTaskSection(task) {
+      const section = el('section', 'section pt-4 pb-2');
+      const h = el('h2', 'title is-4', { text: task.name });
+      const brief = el('p', 'gal-brief', { text: task.brief || '' });
+      section.appendChild(h);
+      section.appendChild(brief);
+
+      const grid = el('div', 'columns is-multiline');
+      if (!task.models || task.models.length === 0) {
+        const empty = el('div', 'gal-empty', { text: 'No models for this task.' });
+        grid.appendChild(el('div', 'column is-12')).appendChild(empty);
+      } else {
+        task.models.forEach(model => {
+          const col = el('div', 'column is-12-tablet is-6-desktop is-4-widescreen');
+          col.appendChild(buildModelCard(task, model));
+          grid.appendChild(col);
+        });
+      }
+      section.appendChild(grid);
+      return section;
+    }
+
+    function rebuildSummary(data) {
+      const tbody = $('#summary-body');
+      tbody.innerHTML = '';
+
+      // Aggregate votes across all tasks per model
+      const totals = new Map();
+      (data.tasks || []).forEach(task => {
+        (task.models || []).forEach(m => {
+          const modelName = m.model_name;
+          const votes = getVotes(task.name, modelName);
+          totals.set(modelName, (totals.get(modelName) || 0) + votes);
+        });
+      });
+
+      const rows = Array.from(totals.entries())
+        .map(([model, votes]) => ({ model, votes }))
+        .sort((a, b) => b.votes - a.votes);
+
+      rows.forEach(r => {
+        const tr = el('tr');
+        tr.appendChild(el('td', null, { text: r.model }));
+        tr.appendChild(el('td', 'has-text-right', { text: String(r.votes) }));
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderApp(data) {
+      const app = $('#app');
+      app.innerHTML = '';
+
+      if (!data.tasks || data.tasks.length === 0) {
+        const empty = el('div', 'gal-empty', { text: 'No data available.' });
+        app.appendChild(empty);
+        rebuildSummary(data);
+        return;
+      }
+
+      data.tasks.forEach(task => {
+        app.appendChild(buildTaskSection(task));
+      });
+
+      rebuildSummary(data);
+    }
+
+    try {
+      const raw = $('#embedded-data').textContent || '{}';
+      const DATA = JSON.parse(raw);
+      window.__DATA__ = DATA;
+      renderApp(DATA);
+
+      // Wire up reset button
+      const resetBtn = $('#reset-votes');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          if (!confirm('Reset all votes?')) return;
+          resetAllVotes(window.__DATA__ || { tasks: [] });
+          updateAllVoteBadges();
+          rebuildSummary(window.__DATA__ || { tasks: [] });
+        });
+      }
+    } catch (e) {
+      console.error('Failed to parse embedded data:', e);
+      $('#app').innerHTML = '<div class="gal-empty">Failed to load data.</div>';
+    }
+  })();
+  </script>
+</body>
+</html>

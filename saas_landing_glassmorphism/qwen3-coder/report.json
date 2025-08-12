@@ -1,0 +1,20 @@
+{
+  "structure": {
+    "missing_sections": []
+  },
+  "responsiveness": {
+    "mobile": true,
+    "laptop": true,
+    "desktop": true
+  },
+  "accessibility": {},
+  "performance": {
+    "js_size_kb": 14.5439453125,
+    "css_size_kb": 1.6220703125
+  },
+  "console_messages": [],
+  "passed": true,
+  "scrore": 85,
+  "generation_time": 136.70381212234497,
+  "attempts": 1
+}

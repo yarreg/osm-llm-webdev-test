@@ -1,0 +1,58 @@
+:root {
+  --accent: #e63946;
+}
+
+body {
+  font-family: 'Courier New', Courier, monospace;
+  line-height: 1.5;
+}
+
+.font-mono {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+/* Brutalist grid enhancements */
+.grid > * {
+  box-shadow: -2px -2px 0px 0px black;
+}
+
+/* Performance-optimized transitions */
+.transition-colors {
+  transition-property: color, background-color, border-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+/* Accessibility focus states */
+[tabindex="0"]:focus,
+a:focus,
+button:focus {
+  outline-offset: 4px;
+}
+
+/* Mobile-first responsive adjustments */
+@media (max-width: 640px) {
+  .text-6xl {
+    font-size: 3.5rem;
+    line-height: 1;
+  }
+  
+  .text-3xl {
+    font-size: 1.875rem;
+  }
+
+  .py-20 {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+}
+
+/* Scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Remove tap highlight on mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
+}

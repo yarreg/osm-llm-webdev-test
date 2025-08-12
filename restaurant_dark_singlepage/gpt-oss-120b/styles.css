@@ -1,0 +1,79 @@
+/* styles.css – Custom CSS for Nocturne landing page */
+
+/* Theme variables */
+:root {
+  --color-primary: #6366f1; /* Indigo 500 */
+  --color-primary-dark: #4f46e5; /* Indigo 600 */
+  --color-bg-dark: #111827; /* Gray 900 */
+  --color-bg-darker: #0f172a; /* Gray 950 */
+  --color-glass-bg: rgba(255, 255, 255, 0.08);
+  --color-glass-border: rgba(255, 255, 255, 0.12);
+}
+
+/* Glassmorphism helper */
+.glass {
+  background: var(--color-glass-bg);
+  border: 1px solid var(--color-glass-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 0.75rem;
+}
+
+/* Smooth scroll behavior for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Fade‑in animation for sections */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+section {
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+/* Hover micro‑interaction for glass cards */
+.glass:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Responsive typography tweaks */
+@media (max-width: 640px) {
+  h1 {
+    font-size: 2.5rem;
+  }
+  h2 {
+    font-size: 2rem;
+  }
+}
+
+/* Accessibility focus outline */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Button transition helper */
+button {
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+/* Ensure the sticky navbar stays above content */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}

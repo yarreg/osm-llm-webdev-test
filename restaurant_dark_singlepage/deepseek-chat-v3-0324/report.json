@@ -1,0 +1,25 @@
+{
+  "structure": {
+    "missing_sections": []
+  },
+  "responsiveness": {
+    "mobile": true,
+    "laptop": false,
+    "desktop": true
+  },
+  "accessibility": {},
+  "performance": {
+    "js_size_kb": 13.900390625,
+    "css_size_kb": 2.7666015625
+  },
+  "console_messages": [
+    {
+      "type": "debug",
+      "text": "Search endpoint requested!"
+    }
+  ],
+  "passed": false,
+  "scrore": 25,
+  "generation_time": 1089.84197473526,
+  "attempts": 3
+}

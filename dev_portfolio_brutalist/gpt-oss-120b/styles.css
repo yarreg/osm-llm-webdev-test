@@ -1,0 +1,101 @@
+/* styles.css */
+
+/* CSS Variables for Brutalist Palette */
+:root {
+  --bg: #f5f5f5;
+  --fg: #111111;
+  --accent: #000000;
+}
+
+/* Reset & Base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+}
+
+/* Section Borders */
+section {
+  border-top: 4px solid var(--accent);
+  border-bottom: 4px solid var(--accent);
+}
+
+/* Headings */
+h1,
+h2,
+h3 {
+  margin: 0;
+}
+
+/* Hover Effects */
+.hover\:bg-black:hover {
+  background-color: var(--accent) !important;
+}
+.hover\:text-white:hover {
+  color: #ffffff !important;
+}
+
+/* Fade‑in on scroll (optional – can be triggered via JS) */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 640px) {
+  .text-5xl {
+    font-size: 2.5rem;
+  }
+  .text-3xl {
+    font-size: 1.75rem;
+  }
+}
+
+/* Utility for bold borders */
+.border-2 {
+  border-width: 2px;
+}
+.border-black {
+  border-color: var(--accent);
+}
+
+/* Button Reset */
+button {
+  cursor: pointer;
+}
+
+/* Disabled state */
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* Input focus */
+input:focus,
+textarea:focus {
+  outline: none;
+}
+
+/* Simple animation for button hover */
+button:hover {
+  background-color: #ffffff;
+  color: var(--accent);
+}

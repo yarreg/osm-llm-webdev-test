@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap');
+
+:root {
+  --color-dark: #0a0a0a;
+  --color-darker: #111111;
+  --color-light: #f3f4f6;
+  --color-accent: #d4a017;
+  --color-accent-dark: #b8860b;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  background-color: var(--color-dark);
+  color: var(--color-light);
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Crimson Pro', serif;
+}
+
+.glass {
+  background: rgba(15, 15, 15, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Custom Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+/* Scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-accent-dark);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 3rem;
+  }
+  
+  .menu-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Form focus styles */
+input:focus, textarea:focus, select:focus {
+  box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.3);
+}
+
+/* Button hover effects */
+.btn-hover {
+  transition: all 0.3s ease;
+}
+
+.btn-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(212, 160, 23, 0.2);
+}

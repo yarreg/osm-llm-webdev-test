@@ -1,0 +1,119 @@
+:root {
+  --amber-gold: #d4af37;
+  --dark-bg: #111827;
+  --darker-bg: #0f172a;
+  --amber-dark: #92400e;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--dark-bg);
+  color: #fef3c7;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Playfair Display', serif;
+}
+
+/* Glassmorphism effects */
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.backdrop-blur-lg {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Smooth transitions */
+a, button {
+  transition: all 0.3s ease;
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+/* Scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d4af37;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #f59e0b;
+}
+
+/* Form input focus effects */
+input:focus, select:focus, textarea:focus {
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-content {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  
+  .reservation-form {
+    padding: 1.5rem;
+  }
+  
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Gradient borders */
+.gradient-border {
+  position: relative;
+  border: none;
+  background: linear-gradient(to bottom, var(--dark-bg), var(--darker-bg)) padding-box,
+              linear-gradient(45deg, var(--amber-dark), var(--amber-gold)) border-box;
+  border-width: 2px;
+  border-style: solid;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+}
+
+/* Hover effects for cards */
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Text gradient */
+.text-gradient {
+  background: linear-gradient(45deg, #f59e0b, #d4af37);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Divider styling */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #d4af37, transparent);
+  margin: 2rem 0;
+}

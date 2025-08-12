@@ -1,0 +1,53 @@
+/* styles.css */
+
+/* Theme colors */
+:root {
+  --color-primary-500: #4f46e5; /* Indigo 600 */
+  --color-primary-600: #4338ca; /* Indigo 700 */
+  --color-primary-700: #3730a3; /* Indigo 800 */
+  --color-primary-800: #312e81; /* Indigo 900 */
+}
+
+/* Tailwind utility overrides for custom colors */
+.bg-primary-500 { background-color: var(--color-primary-500); }
+.bg-primary-600 { background-color: var(--color-primary-600); }
+.bg-primary-700 { background-color: var(--color-primary-700); }
+.bg-primary-800 { background-color: var(--color-primary-800); }
+
+.text-primary-500 { color: var(--color-primary-500); }
+.text-primary-600 { color: var(--color-primary-600); }
+.text-primary-700 { color: var(--color-primary-700); }
+.text-primary-800 { color: var(--color-primary-800); }
+
+.border-primary-500 { border-color: var(--color-primary-500); }
+.ring-primary-400 { --tw-ring-color: var(--color-primary-500); }
+
+/* Glassmorphism */
+.glass {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Fade‑in animation for sections */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+section {
+  animation: fadeIn 0.8s ease-out both;
+}
+
+/* Responsive container fix for older browsers */
+.container {
+  width: 100%;
+  max-width: 1280px;
+}
+
+/* Ensure focus outlines are visible */
+:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}

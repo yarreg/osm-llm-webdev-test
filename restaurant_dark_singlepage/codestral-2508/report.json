@@ -1,0 +1,25 @@
+{
+  "structure": {
+    "missing_sections": []
+  },
+  "responsiveness": {
+    "mobile": true,
+    "laptop": true,
+    "desktop": true
+  },
+  "accessibility": {},
+  "performance": {
+    "js_size_kb": 13.1943359375,
+    "css_size_kb": 1.5048828125
+  },
+  "console_messages": [
+    {
+      "type": "error",
+      "text": "Unexpected token ')'"
+    }
+  ],
+  "passed": false,
+  "scrore": 45,
+  "generation_time": 249.91957235336304,
+  "attempts": 3
+}

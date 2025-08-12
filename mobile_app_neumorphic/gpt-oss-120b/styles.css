@@ -1,0 +1,92 @@
+/* ------------------------------------------------------------
+   Custom CSS – Neumorphic theme & utility extensions
+   ------------------------------------------------------------ */
+
+:root {
+  --bg: #e0e5ec; /* Light gray for neumorphic background */
+  --primary: #4f46e5; /* Indigo – used for CTA */
+  --text: #333333;
+}
+
+/* Global resets & base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* Neumorphic container – reusable */
+.neumorphic {
+  background: var(--bg);
+  border-radius: 1rem;
+  box-shadow: 8px 8px 15px #a3b1c6, -8px -8px 15px #ffffff;
+  transition: all 0.2s ease;
+}
+
+.neumorphic:hover {
+  box-shadow: inset 4px 4px 8px #a3b1c6, inset -4px -4px 8px #ffffff;
+}
+
+/* Button – neumorphic feel */
+.neumorphic-button {
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 2rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 4px 4px 8px #a3b1c6, -4px -4px 8px #ffffff;
+  transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.neumorphic-button:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.neumorphic-button:active {
+  transform: scale(0.95);
+  box-shadow: inset 2px 2px 4px #a3b1c6, inset -2px -2px 4px #ffffff;
+}
+
+/* Fade‑in animation for sections */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+section {
+  animation: fadeIn 0.8s ease forwards;
+}
+
+/* Tailwind overrides – ensure the custom colors are used */
+.bg-primary { background-color: var(--primary) !important; }
+.text-primary { color: var(--primary) !important; }
+
+/* Responsive container helper (mirrors Tailwind's container) */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Accessibility focus outline for non‑button elements */
+[tabindex]:focus, a:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Utility for smooth scrolling (fallback for browsers without CSS support) */
+html {
+  scroll-behavior: smooth;
+}

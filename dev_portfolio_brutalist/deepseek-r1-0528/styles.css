@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono&display=swap');
+
+:root {
+  --brutal-border: 4px solid #000;
+  --brutal-red: #ff0000;
+  --brutal-bg: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background-color: var(--brutal-bg);
+  color: #000;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+p {
+  font-family: 'Space Mono', monospace;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  position: relative;
+}
+
+a:hover {
+  color: var(--brutal-red);
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Brutalist animations */
+@keyframes brutal-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+@keyframes border-glow {
+  0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+}
+
+.hover\:animate-pulse:hover {
+  animation: brutal-pulse 0.5s ease-in-out;
+}
+
+.hover\:border-glow:hover {
+  animation: border-glow 1.5s infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .grid-cols-7 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .grid-cols-7 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  nav ul {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

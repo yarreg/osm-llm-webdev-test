@@ -1,0 +1,100 @@
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    --transition-speed: 0.3s;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #1a1a1a;
+    line-height: 1.6;
+}
+
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: var(--glass-shadow);
+    transition: all var(--transition-speed) ease;
+}
+
+.hero-section {
+    background-image: url('https://placehold.co/1920x1080/3b82f6/FFFFFF?text=Hero+Background');
+    background-size: cover;
+    background-position: center;
+}
+
+.cta-button {
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all var(--transition-speed) ease;
+}
+
+.cta-button:hover {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+    
+    .hero-section p {
+        font-size: 1.125rem;
+    }
+}
+
+/* Smooth scroll behavior */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Animation for fading in elements */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+/* Scroll-triggered animations */
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.scroll-animate {
+    opacity: 0;
+    animation: slideIn 0.8s ease-out forwards;
+    animation-delay: var(--delay, 0.2s);
+}
+
+/* Add this to elements you want to animate on scroll */
+.scroll-animate.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Intersection Observer for scroll animations */
+document.addEventListener('DOMContentLoaded', function() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.scroll-animate').forEach(el => {
+        observer.observe(el);
+    });
+});

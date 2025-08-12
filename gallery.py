@@ -150,12 +150,20 @@ TEMPLATE_HTML = r"""<!DOCTYPE html>
       <hr />
 
       <section id="summary-section">
-        <h2 class="title is-4">Vote result</h2>
+        <!-- replace the heading with a heading + reset button -->
+        <div class="level is-mobile">
+          <div class="level-left">
+            <h2 class="title is-4">Vote result</h2>
+          </div>
+          <div class="level-right">
+            <button id="reset-votes" class="button is-small is-danger is-light" type="button">Reset votes</button>
+          </div>
+        </div>
         <div class="table-container">
           <table class="table is-striped is-fullwidth gal-summary">
             <thead>
               <tr>
-                <th>Task</th>
+                <!-- changed: aggregate by model, no per-task rows -->
                 <th>Model</th>
                 <th class="has-text-right">Votes</th>
               </tr>
@@ -204,6 +212,29 @@ TEMPLATE_HTML = r"""<!DOCTYPE html>
       const next = cur + 1;
       localStorage.setItem(k, String(next));
       return next;
+    }
+
+    // NEW: remove a single vote entry and reset helpers
+    function removeVote(taskName, modelName) {
+      localStorage.removeItem(keyForVote(taskName, modelName));
+    }
+
+    function resetAllVotes(data) {
+      (data.tasks || []).forEach(task => {
+        (task.models || []).forEach(m => {
+          removeVote(task.name, m.model_name);
+        });
+      });
+    }
+
+    function updateAllVoteBadges() {
+      $all('.gal-vote-badge').forEach(badge => {
+        const task = badge.getAttribute('data-task');
+        const model = badge.getAttribute('data-model');
+        if (task && model) {
+          badge.textContent = String(getVotes(task, model));
+        }
+      });
     }
 
     function pretty(obj) {
@@ -315,7 +346,9 @@ TEMPLATE_HTML = r"""<!DOCTYPE html>
 
         const voteBtn = el('button', 'button is-warning is-light', { type:'button', text:'Vote' });
         const voteBadge = el('span', 'tag is-warning is-light gal-vote-badge', {
-          text: String(getVotes(task.name, model.model_name))
+          text: String(getVotes(task.name, model.model_name)),
+          'data-task': task.name,
+          'data-model': model.model_name
         });
         actions.appendChild(voteBtn);
         actions.appendChild(voteBadge);
@@ -344,11 +377,12 @@ TEMPLATE_HTML = r"""<!DOCTYPE html>
       } else {
         // FAILED
         content.appendChild(renderErrorBlock());
-        // even for failed, allow voting (если хочется сравнить "симпатии" к попытке)
         const actions = el('div', 'gal-actions');
         const voteBtn = el('button', 'button is-warning is-light', { type:'button', text:'Vote' });
         const voteBadge = el('span', 'tag is-warning is-light gal-vote-badge', {
-          text: String(getVotes(task.name, model.model_name))
+          text: String(getVotes(task.name, model.model_name)),
+          'data-task': task.name,
+          'data-model': model.model_name
         });
         actions.appendChild(voteBtn);
         actions.appendChild(voteBadge);
@@ -391,23 +425,25 @@ TEMPLATE_HTML = r"""<!DOCTYPE html>
       const tbody = $('#summary-body');
       tbody.innerHTML = '';
 
+      // Aggregate votes across all tasks per model
+      const totals = new Map();
       (data.tasks || []).forEach(task => {
-        const rows = (task.models || []).map(m => {
-          return {
-            task: task.name,
-            model: m.model_name,
-            votes: getVotes(task.name, m.model_name)
-          };
-        }).sort((a, b) => b.votes - a.votes);
-
-        rows.forEach(r => {
-          const tr = el('tr', null, null);
-          tr.appendChild(el('td', null, { text: r.task }));
-          tr.appendChild(el('td', null, { text: r.model }));
-          const vtd = el('td', 'has-text-right', { text: String(r.votes) });
-          tr.appendChild(vtd);
-          tbody.appendChild(tr);
+        (task.models || []).forEach(m => {
+          const modelName = m.model_name;
+          const votes = getVotes(task.name, modelName);
+          totals.set(modelName, (totals.get(modelName) || 0) + votes);
         });
+      });
+
+      const rows = Array.from(totals.entries())
+        .map(([model, votes]) => ({ model, votes }))
+        .sort((a, b) => b.votes - a.votes);
+
+      rows.forEach(r => {
+        const tr = el('tr');
+        tr.appendChild(el('td', null, { text: r.model }));
+        tr.appendChild(el('td', 'has-text-right', { text: String(r.votes) }));
+        tbody.appendChild(tr);
       });
     }
 
@@ -434,6 +470,17 @@ TEMPLATE_HTML = r"""<!DOCTYPE html>
       const DATA = JSON.parse(raw);
       window.__DATA__ = DATA;
       renderApp(DATA);
+
+      // Wire up reset button
+      const resetBtn = $('#reset-votes');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          if (!confirm('Reset all votes?')) return;
+          resetAllVotes(window.__DATA__ || { tasks: [] });
+          updateAllVoteBadges();
+          rebuildSummary(window.__DATA__ || { tasks: [] });
+        });
+      }
     } catch (e) {
       console.error('Failed to parse embedded data:', e);
       $('#app').innerHTML = '<div class="gal-empty">Failed to load data.</div>';
@@ -458,8 +505,8 @@ def build_data(config_path: Path, result_dir: Path) -> Dict[str, Any]:
     data_tasks: List[Dict[str, Any]] = []
 
     for task in tasks:
-        tname = str(task.get("name", "")).strip()
-        brief = task.get("brief", "") or ""
+        tname = str(task.get("name", "")).strip();
+        brief = task.get("brief", "") or "";
         if not tname:
             continue
 
@@ -486,7 +533,7 @@ def build_data(config_path: Path, result_dir: Path) -> Dict[str, Any]:
                     screenshots_map[key] = str(p.as_posix())
 
             # Report
-            report_obj: Optional[Dict[str, Any]] = None
+            report_obj: Optional[Dict[str, Any]] = None;
             if report_path.exists():
                 try:
                     with report_path.open("r", encoding="utf-8") as rf:

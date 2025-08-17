@@ -63,32 +63,43 @@ async def run_test(client, task, model_info, web_libs, args):
     model_name = model_info["name"]
     call_method = model_info.get("call", "json").upper()
 
-    start_time = time()
     generator = Generator(client, task, model_name, CallMethod[call_method])
-    generated_files = await generator.generate()
-    generation_time = time() - start_time
-
     validator = Validator(task, web_libs)
-    validation_result = await validator.validate(generated_files)
     
-    attempts = 1
+    attempts = 0
+    generation_time = 0.0
+    generated_files = None
+    validation_result = None
 
-    for i in range(args.retries):
-        if validation_result.passed:
-            logging.info(f"Test passed on attempt {i + 1}")
-            break
-
-        logging.info(f"Test failed on attempt {i + 1}. Retrying...")
-        start_time = time()
+    while attempts <= args.retries:
         attempts += 1
-        generated_files = await generator.repair(
-            generated_files,
-            validation_result.console_messages,
-            validation_result.structure.missing_sections
-        )
-        generation_time += time() - start_time
-        validation_result = await validator.validate(generated_files)
-    
+        logging.info(f"Attempt {attempts}/{args.retries + 1} for {task['name']} with {model_name}")
+        
+        try:
+            start_time = time()
+            if generated_files is None: # First attempt
+                generated_files = await generator.generate()
+            else: # Repair attempt
+                generated_files = await generator.repair(
+                    generated_files,
+                    validation_result.console_messages,
+                    validation_result.structure.missing_sections
+                )
+            generation_time += time() - start_time
+
+            validation_result = await validator.validate(generated_files)
+
+            if validation_result.passed:
+                logging.info(f"Test passed on attempt {attempts}")
+                break
+            
+            logging.info(f"Test failed on attempt {attempts}. Retrying...")
+
+        except Exception as e:
+            logging.error(f"An exception occurred during generation/repair on attempt {attempts}: {e}")
+            if attempts > args.retries:
+                raise Exception(f"Final attempt failed for {task['name']} with {model_name}. No more retries left.")
+
     logging.info(f"Final result for {task['name']} with {model_name}: Score={validation_result.score}")
     logging.debug(f"Console messages: {validation_result.console_messages}")
 
@@ -157,16 +168,11 @@ async def main():
                         logging.exception(f"Task {task['name']} with {model['name']} failed: {e}")
             tasks_to_run.append(task_with_semaphore())
             
-    # TODO: Build gallery
-    # ...
     
     logging.info(f"Starting generation for {len(tasks_to_run)} tasks...")
     await asyncio.gather(*tasks_to_run)
     logging.info("All tests complete.")
 
-    # Generate the gallery
-    #from generate_gallery import generate_gallery
-    #generate_gallery()
 
 if __name__ == '__main__':
     asyncio.run(main())
